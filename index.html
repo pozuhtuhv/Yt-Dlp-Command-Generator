@@ -117,7 +117,7 @@
         .help-tooltip:hover .tooltip-text {
             visibility: visible;
         }
-            .quality-label {
+        .quality-label {
             display: block;
             margin-top: 15px;
         }
@@ -125,40 +125,62 @@
     <script>
         let selectedOS = "windows";
         
+        // OS 변경 버튼 클릭 시 호출되는 함수
         function toggleOS() {
+            // selectedOS 값을 "windows"에서 "mac" 또는 그 반대로 토글
             selectedOS = selectedOS === "windows" ? "mac" : "windows";
+            // 화면에 표시되는 OS 텍스트 변경 (Windows 또는 Mac)
             document.getElementById("selectedOS").textContent = selectedOS === "windows" ? "Windows" : "Mac";
+            // OS에 맞는 설치 명령어를 업데이트
             document.getElementById("installCommand").textContent = selectedOS === "windows" 
-                ? "choco install yt-dlp ffmpeg" 
-                : "brew install yt-dlp ffmpeg";
+                ? "choco install yt-dlp ffmpeg" // Windows의 설치 명령어
+                : "brew install yt-dlp ffmpeg";  // macOS의 설치 명령어
         }
         
+        // 명령어 생성 및 복사하는 함수
         function generateAndCopyCommand() {
             let os = selectedOS;
-            let url = document.getElementById("url").value.trim();
-            let username = document.getElementById("username").value.trim();
-            let quality = document.getElementById("quality").value;
-            let subs = document.getElementById("subs").checked ? "--write-subs" : "";
-            let audioOnly = document.getElementById("audioOnly").checked ? "--extract-audio" : "";
-            let parallel = document.getElementById("parallel").checked ? "-N 4" : "";
-            let verbose = document.getElementById("verbose").checked ? "-v" : "";
+            let url = document.getElementById("url").value.trim(); // 입력된 URL을 가져옴
+            let username = document.getElementById("username").value.trim(); // 입력된 사용자 계정 이름을 가져옴
+            let quality = document.getElementById("quality").value; // 선택된 화질 옵션을 가져옴
+            let subs = document.getElementById("subs").checked ? "--write-subs" : ""; // 자막 다운로드 옵션
+            let audioOnly = document.getElementById("audioOnly").checked ? "--extract-audio" : ""; // 오디오만 다운로드 옵션
+            let parallel = document.getElementById("parallel").checked ? "-N 4" : ""; // 병렬 다운로드 옵션
+            let verbose = document.getElementById("verbose").checked ? "-v" : ""; // 디버그 로그 출력 옵션
             let folder = os === "windows" 
-                ? `C:\\Users\\${username}\\Desktop` 
-                : `/Users/${username}/Desktop`;
-            let filename = document.getElementById("filename").value.trim() || "input.mp4";
+                ? `C:\\Users\\${username}\\Desktop` // Windows 경로 설정
+                : `/Users/${username}/Desktop`; // macOS 경로 설정
+            // 파일 이름이 비어있으면 현재 시간을 기반으로 파일 이름을 자동 생성
+            let filename = document.getElementById("filename").value.trim() || getCurrentDateTime();
             
+            // URL과 사용자 계정이 입력되지 않으면 알림
             if (!url || !username) {
                 alert("URL과 사용자 계정 이름을 입력해주세요.");
                 return;
             }
             
+            // yt-dlp 명령어 생성
             let command = `yt-dlp -o "${folder}/${filename}" ${quality} ${subs} ${audioOnly} ${parallel} ${verbose} "${url}"`;
             
+            // 명령어를 화면에 출력하고, 클립보드에 복사
             let commandOutput = document.getElementById("commandOutput");
             commandOutput.value = command;
             commandOutput.select();
             document.execCommand("copy");
             alert("명령어가 생성되고 클립보드에 복사되었습니다.");
+        }
+
+        // 현재 날짜와 시간을 "YYYY-MM-DD HH:mm:ss" 형식으로 반환하는 함수
+        function getCurrentDateTime() {
+            let now = new Date();
+            let year = now.getFullYear();
+            let month = String(now.getMonth() + 1).padStart(2, '0'); // 월은 0부터 시작하므로 +1
+            let day = String(now.getDate()).padStart(2, '0');
+            let hours = String(now.getHours()).padStart(2, '0');
+            let minutes = String(now.getMinutes()).padStart(2, '0');
+            let seconds = String(now.getSeconds()).padStart(2, '0');
+            // YYYY-MM-DD HH:mm:ss 형식으로 반환
+            return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
         }
     </script>
 </head>
