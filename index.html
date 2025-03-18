@@ -95,7 +95,7 @@
             document.getElementById("commandOutput").value = command;
             document.getElementById("commandOutput").select();
             document.execCommand("copy");
-            alert(`\${os.toUpperCase()} OS 환경에 맞는 \${isM3U8 ? 'M3U8' : '일반'} 다운로드 명령어가 생성되고 클립보드에 복사되었습니다.`);
+            alert(`${os.toUpperCase()} OS 환경에 맞는 ${isM3U8 ? 'M3U8' : '일반'} 다운로드 명령어가 생성되고 클립보드에 복사되었습니다.`);
         }
     </script>
 </head>
@@ -108,7 +108,7 @@
         </div>
         
         <input type="text" id="username" placeholder="운영체제 사용자 계정 이름 입력">
-        <input type="text" id="url" placeholder="다운로드할 URL (shtml 또는 M3U8)">
+        <input type="text" id="url" placeholder="다운로드할 URL (일반 또는 M3U8 지원)">
         <input type="text" id="filename" placeholder="파일 이름 (기본: output.mp4)">
         <div><br></div>
         <label>화질 선택:</label>
